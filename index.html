@@ -255,6 +255,12 @@
             0% { transform: scale(1); opacity: 0.8; }
             100% { transform: scale(1.05); opacity: 1; }
         }
+        #covertcomm-logo {
+            max-width: 80vw;
+            height: auto;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 10px var(--neon-blue));
+        }
 
         /* --- Classified Mission Log --- */
         #aim-of-project h2, #founders h2, #research-papers h2 {
@@ -368,19 +374,16 @@
             position: relative;
             width: 100%;
             max-width: 800px;
-            height: 0; /* Ensures the container's height is determined by padding-bottom */
-            padding-bottom: 56.25%; /* Maintains a 16:9 aspect ratio */
+            /* Removed height and padding to fit video aspect ratio */
             background: rgba(0, 0, 0, 0.4);
             border: 2px solid var(--neon-blue);
             box-shadow: 0 0 20px var(--neon-blue);
             overflow: hidden;
         }
         .video-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
+            display: block; /* To remove extra space below the video */
             width: 100%;
-            height: 100%;
+            height: auto; /* To maintain original aspect ratio */
         }
 
         /* --- PDF Modal --- */
@@ -494,7 +497,7 @@
 
         <!-- Hero Section -->
         <section id="hero" class="content-section">
-            <h1 id="hero-title">CovertComm</h1>
+            <img src="convertcommlogo.png" alt="CovertComm Logo" id="covertcomm-logo">
             <h2 id="hero-subtitle">AI-Powered Timed Encryption & Fictional Obfuscation System.</h2>
             <img src="bgearth.png" alt="Holographic Globe" id="holographic-image">
         </section>
@@ -590,14 +593,14 @@
         <section id="founders" class="content-section">
             <h2>Founders</h2>
             <div class="founder-profile">
-                <img src="https://placehold.co/100x100/101010/8899aa?text=Your+Photo" alt="Your Photo" class="founder-photo">
+                <img src="https-placehold-co-100x100-101010-8899aa-text-Your-Photo.png" alt="Your Photo" class="founder-photo">
                 <div class="founder-info">
                     <h3>Your Name</h3>
                     <p>Project Lead & Architect</p>
                 </div>
             </div>
             <div class="founder-profile">
-                <img src="https://placehold.co/100x100/101010/8899aa?text=Aniket%27s+Photo" alt="Aniket's Photo" class="founder-photo">
+                <img src="https-placehold-co-100x100-101010-8899aa-text-Anikets-Photo.png" alt="Aniket's Photo" class="founder-photo">
                 <div class="founder-info">
                     <h3>Aniket</h3>
                     <p>Senior AI/ML Specialist</p>
