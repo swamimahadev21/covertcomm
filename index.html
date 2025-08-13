@@ -93,10 +93,6 @@
             animation: glitch 1s infinite;
         }
 
-        @keyframes blink-cursor {
-            50% { opacity: 0; }
-        }
-
         @keyframes glitch {
             0% { transform: translate(0); }
             20% { transform: translate(-2px, 2px); }
@@ -470,6 +466,8 @@
 
     <!-- Stage 1: Terminal Entry Screen -->
     <div id="terminal-screen">
+        <!-- Hidden input for mobile keyboard -->
+        <input type="text" id="codeword-input-hidden" style="position: absolute; top: -1000px; opacity: 0;">
         <!-- Scanlines effect using a div -->
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(
             to bottom,
@@ -497,7 +495,7 @@
 
         <!-- Hero Section -->
         <section id="hero" class="content-section">
-            <img src="covertcommlogo.jpg" alt="CovertComm Logo" id="covertcomm-logo">
+            <img src="covertcommlogo.png" alt="CovertComm Logo" id="covertcomm-logo">
             <h2 id="hero-subtitle">AI-Powered Timed Encryption & Fictional Obfuscation System.</h2>
             <img src="bgearth.png" alt="Holographic Globe" id="holographic-image">
         </section>
@@ -634,6 +632,7 @@
             const accessGrantedContainer = document.getElementById('access-granted-container');
             const ctx = mouseTrailCanvas.getContext('2d');
             const startMessage = document.getElementById('start-message');
+            const hiddenInput = document.getElementById('codeword-input-hidden');
             
             // Audio Context & Sounds
             let audioCtx = null;
@@ -720,12 +719,11 @@
                 terminalOutput.innerHTML += 'Enter codeword: ';
                 terminalOutput.innerHTML += '<span id="codeword-input"></span><span id="terminal-cursor"></span>';
                 terminalActive = true;
-                window.addEventListener('keydown', handleKeydown);
+                hiddenInput.focus(); // Focus the hidden input to open the keyboard
             };
 
             const handleKeydown = (e) => {
                 if (!terminalActive) return;
-
                 const inputSpan = document.getElementById('codeword-input');
                 
                 if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
@@ -736,10 +734,40 @@
                     currentCodeword = currentCodeword.slice(0, -1);
                     inputSpan.innerHTML = inputSpan.innerHTML.slice(0, -1);
                 } else if (e.key === 'Enter') {
-                    window.removeEventListener('keydown', handleKeydown);
+                    hiddenInput.blur(); // Blur the input to hide the keyboard
                     checkCodeword();
                 }
             };
+            
+            // Listen for input from the hidden field instead of keydown on the window
+            hiddenInput.addEventListener('input', (e) => {
+                if (!terminalActive) return;
+                const inputSpan = document.getElementById('codeword-input');
+                
+                const newLength = e.target.value.length;
+                const oldLength = currentCodeword.length;
+
+                if (newLength > oldLength) {
+                    // Key typed
+                    currentCodeword = e.target.value;
+                    inputSpan.innerHTML += '*';
+                    playBeep();
+                } else if (newLength < oldLength) {
+                    // Backspace pressed
+                    currentCodeword = e.target.value;
+                    inputSpan.innerHTML = inputSpan.innerHTML.slice(0, -1);
+                }
+            });
+
+            hiddenInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Prevent new line in the input field
+                    if (terminalActive) {
+                        checkCodeword();
+                    }
+                }
+            });
+
 
             const checkCodeword = async () => {
                 terminalActive = false;
@@ -760,9 +788,10 @@
                         terminalOutput.innerHTML += '<br>Enter codeword: ';
                         terminalOutput.innerHTML += '<span id="codeword-input"></span><span id="terminal-cursor"></span>';
                         currentCodeword = '';
+                        hiddenInput.value = ''; // Clear the hidden input
                         cursorSpan.style.display = 'inline-block';
                         terminalActive = true;
-                        window.addEventListener('keydown', handleKeydown);
+                        hiddenInput.focus(); // Re-focus the input
                     }
                 }
             };
@@ -890,6 +919,15 @@
             // Start the application
             // Event listener to begin terminal sequence on user interaction
             window.addEventListener('keydown', () => {
+                if (startMessage.style.display !== 'none') {
+                    runTerminal();
+                    animateParticles();
+                    setInterval(updateClock, 1000);
+                    updateClock();
+                }
+            }, { once: true });
+            
+            window.addEventListener('click', () => {
                 if (startMessage.style.display !== 'none') {
                     runTerminal();
                     animateParticles();
