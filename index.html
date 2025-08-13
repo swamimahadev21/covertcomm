@@ -35,20 +35,6 @@
             }
         }
 
-        /* Background grid animation */
-        .hero-bg {
-            background-image:
-                linear-gradient(rgba(10, 15, 28, 0.95), rgba(10, 15, 28, 0.95)),
-                repeating-linear-gradient(0deg, #00f0ff20, #00f0ff20 1px, transparent 1px, transparent 40px),
-                repeating-linear-gradient(90deg, #00f0ff20, #00f0ff20 1px, transparent 1px, transparent 40px);
-            animation: move-bg 60s linear infinite;
-        }
-
-        @keyframes move-bg {
-            from { background-position: 0 0; }
-            to { background-position: 0 80px; }
-        }
-
         /* Hover effects for cards */
         .card-hover:hover {
             transform: translateY(-5px);
@@ -61,8 +47,8 @@
     
     <!-- Hero Section -->
     <section class="relative min-h-screen flex flex-col items-center justify-center text-center p-4 overflow-hidden">
-        <!-- Animated Background -->
-        <div class="absolute inset-0 z-0 hero-bg"></div>
+        <!-- Animated Background Canvas -->
+        <canvas id="heroCanvas" class="absolute inset-0 z-0 w-full h-full"></canvas>
 
         <div class="relative z-10 flex flex-col items-center justify-center p-8 bg-black bg-opacity-20 rounded-xl">
             <!-- Logo -->
@@ -251,7 +237,7 @@
                 </div>
                 <div>
                     <label for="organization" class="block text-sm font-medium text-gray-300 mb-2">Organization</label>
-                    <input type="text" id="organization" name="organization" class="w-full px-4 py-3 bg-[#0a0f1c] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-300" required>
+                    <input type="text" id="organization" name="organization" class="w-full px-4 py-3 bg-[#0a0f1c] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-duration-300" required>
                 </div>
                 <div>
                     <label for="message" class="block text-sm font-medium text-gray-300 mb-2">Message</label>
@@ -268,9 +254,111 @@
         <p class="text-xs text-gray-600 max-w-2xl mx-auto">Disclaimer: Prototype under restricted development. Certain features limited to authorized agencies and partners.</p>
     </footer>
 
-    <!-- Initialize Lucide Icons -->
+    <!-- Initialize Lucide Icons and Canvas Animation -->
     <script>
         lucide.createIcons();
+
+        window.onload = function() {
+            const canvas = document.getElementById('heroCanvas');
+            const ctx = canvas.getContext('2d');
+            let lines = [];
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let lastLineTime = 0;
+
+            // Resize canvas on window resize
+            const handleResize = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
+            window.addEventListener('resize', handleResize);
+            handleResize();
+
+            // Track mouse position
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            // Line object for the animation
+            class Line {
+                constructor(startX, startY, endX, endY) {
+                    this.x1 = startX;
+                    this.y1 = startY;
+                    this.x2 = startX;
+                    this.y2 = startY;
+                    this.endX = endX;
+                    this.endY = endY;
+                    this.length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                    this.progress = 0;
+                    this.speed = Math.random() * 0.02 + 0.005;
+                    this.opacity = 1;
+                    this.color = Math.random() > 0.5 ? '#00f0ff' : '#00ff99';
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x1, this.y1);
+                    ctx.lineTo(this.x2, this.y2);
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 1;
+                    ctx.globalAlpha = this.opacity;
+                    ctx.stroke();
+                }
+
+                update() {
+                    this.progress += this.speed;
+                    this.opacity = 1 - this.progress;
+                    if (this.progress >= 1) return true;
+
+                    // Interpolate the line's end point
+                    this.x2 = this.x1 + (this.endX - this.x1) * this.progress;
+                    this.y2 = this.y1 + (this.endY - this.y1) * this.progress;
+
+                    // Create a short "electric" effect at the end of the line
+                    if (this.progress > 0.5) {
+                        const pulseOpacity = (1 - this.progress) * 2;
+                        const pulseSize = (1 - this.progress) * 5;
+                        ctx.beginPath();
+                        ctx.arc(this.x2, this.y2, pulseSize, 0, 2 * Math.PI);
+                        ctx.fillStyle = this.color;
+                        ctx.globalAlpha = pulseOpacity;
+                        ctx.fill();
+                    }
+                    
+                    return false;
+                }
+            }
+
+            // Animation loop
+            const animate = (timestamp) => {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.globalAlpha = 0.05; // Trail effect
+                ctx.fillStyle = '#0a0f1c';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Create a new line every 50-200ms
+                if (timestamp - lastLineTime > Math.random() * 150 + 50) {
+                    // Start from a random point on the screen
+                    const startX = Math.random() * canvas.width;
+                    const startY = Math.random() * canvas.height;
+                    
+                    // Have lines gravitate towards the mouse, or a random point if far away
+                    const endX = Math.abs(mouseX - startX) < 300 ? mouseX : Math.random() * canvas.width;
+                    const endY = Math.abs(mouseY - startY) < 300 ? mouseY : Math.random() * canvas.height;
+
+                    lines.push(new Line(startX, startY, endX, endY));
+                    lastLineTime = timestamp;
+                }
+
+                // Update and draw lines
+                lines = lines.filter(line => !line.update());
+                lines.forEach(line => line.draw());
+            };
+
+            animate(0);
+        };
     </script>
 </body>
 </html>
