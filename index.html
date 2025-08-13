@@ -125,9 +125,6 @@
             <p id="typing-text" class="text-sm md:text-xl"></p>
             <h1 id="intro-logo" class="text-6xl md:text-8xl font-extrabold uppercase mb-4 text-white text-glow-blue opacity-0 mt-8">CovertComm</h1>
             <p id="intro-tagline" class="text-xl md:text-2xl font-light text-[#00ff99] max-w-2xl mb-8 opacity-0">AI-Powered Timed Encryption & Fictional Obfuscation System.</p>
-            <button id="enter-btn" class="px-8 py-4 text-lg font-bold rounded-full bg-[#00f0ff] text-[#0a0f1c] shadow-lg opacity-0 transition-all duration-300 hover:bg-white">
-                ENTER SECURE SITE
-            </button>
         </div>
     </div>
     
@@ -359,7 +356,6 @@
             const introContent = document.getElementById('intro-content');
             const introLogo = document.getElementById('intro-logo');
             const introTagline = document.getElementById('intro-tagline');
-            const enterButton = document.getElementById('enter-btn');
             const mainContent = document.getElementById('main-content');
 
             const textToType = "Initializing CovertComm secure channel...";
@@ -389,11 +385,14 @@
                                 introTagline.style.opacity = '1';
                             }, 1000);
 
-                            // Button appears
+                            // Automatically transition to main content after a short delay
                             setTimeout(() => {
-                                enterButton.style.opacity = '1';
-                                enterButton.classList.add('pulse-btn');
-                            }, 2000);
+                                introScreen.style.opacity = '0';
+                                mainContent.style.opacity = '1';
+                                setTimeout(() => {
+                                    introScreen.style.display = 'none';
+                                }, 1000);
+                            }, 3000); // Wait 3 seconds for the logo/tagline to be seen
 
                         }, 500);
 
@@ -402,16 +401,6 @@
             }
 
             typeWriter();
-
-            enterButton.addEventListener('click', () => {
-                // Fade out intro screen and fade in main content
-                introScreen.style.opacity = '0';
-                mainContent.style.opacity = '1';
-                setTimeout(() => {
-                    introScreen.style.display = 'none';
-                }, 1000);
-            });
-
 
             // Existing Hero Section Animation
             const canvas = document.getElementById('heroCanvas');
