@@ -3,41 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CovertComm - AI-Powered Timed Encryption</title>
+    <title>CovertComm - Military-Grade Covert Communication</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Inter Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0a0f1c;
+            background-color: #0a0f1a;
             color: #e2e8f0;
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
 
-        /* Custom glow effect for the logo text */
-        .text-glow-blue {
-            text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff, 0 0 15px #00f0ff, 0 0 20px #00f0ff;
+        /* Neon blue hover effect for nav links */
+        .nav-link:hover {
             color: #00f0ff;
-            animation: text-glow-pulse 3s infinite ease-in-out;
+            position: relative;
         }
 
-        @keyframes text-glow-pulse {
-            0%, 100% {
-                text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
-            }
-            50% {
-                text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 30px #00f0ff;
-            }
+        .nav-link:hover::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #00f0ff;
+            animation: underline-grow 0.3s ease-out forwards;
+        }
+
+        @keyframes underline-grow {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        
+        /* Neon blue text glow */
+        .text-glow-blue {
+            text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
         }
 
         /* Frosted Glass Effect */
         .frosted-glass {
-            background-color: rgba(10, 15, 28, 0.4);
+            background-color: rgba(10, 15, 26, 0.4);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(0, 240, 255, 0.2);
         }
@@ -49,109 +62,75 @@
             border-color: #00f0ff;
         }
 
-        /* Hero Section Intro Animation Styles */
-        .intro-screen {
-            position: fixed;
+        /* Glitch effect for button on hover */
+        .glitch-btn:hover {
+            animation: glitch-anim 0.5s linear infinite;
+        }
+
+        @keyframes glitch-anim {
+            0% { text-shadow: 2px 0 #00f0ff, -2px 0 #00ff9d; }
+            50% { text-shadow: -2px 0 #00f0ff, 2px 0 #00ff9d; }
+            100% { text-shadow: 2px 0 #00f0ff, -2px 0 #00ff9d; }
+        }
+
+        .logo-glow-filter {
+            filter: drop-shadow(0 0 5px #00f0ff) drop-shadow(0 0 10px #00f0ff);
+        }
+
+        #three-container {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            transition: opacity 1s ease-in-out;
+            z-index: 0;
         }
-
-        #typing-text {
-            color: #00ff99;
-            font-family: 'Courier New', Courier, monospace;
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 2px solid #00ff99;
-            animation: 
-                typing 3s steps(30, end),
-                blink-caret .75s step-end infinite;
-        }
-
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #00ff99 }
-        }
-
-        .intro-content {
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            text-align: center;
-        }
-
-        .glitch {
-            animation: glitch-anim 1.5s steps(2, end) infinite;
-        }
-
-        @keyframes glitch-anim {
-            0% { text-shadow: 2px 0 #00f0ff, -2px 0 #00ff99; }
-            50% { text-shadow: -2px 0 #00f0ff, 2px 0 #00ff99; }
-            100% { text-shadow: 2px 0 #00f0ff, -2px 0 #00ff99; }
-        }
-
-        .pulse-btn {
-            animation: pulse-glow 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
-            }
-            50% {
-                box-shadow: 0 0 15px #00f0ff, 0 0 25px #00f0ff;
-            }
-        }
-
     </style>
 </head>
-<body class="bg-[#0a0f1c] text-[#e2e8f0] font-sans">
+<body class="bg-[#0a0f1a] text-[#e2e8f0] font-sans">
     
-    <!-- Intro Screen -->
-    <div id="intro-screen" class="intro-screen">
-        <div id="intro-content" class="intro-content flex flex-col items-center">
-            <p id="typing-text" class="text-sm md:text-xl"></p>
-            <h1 id="intro-logo" class="text-6xl md:text-8xl font-extrabold uppercase mb-4 text-white text-glow-blue opacity-0 mt-8">CovertComm</h1>
-            <p id="intro-tagline" class="text-xl md:text-2xl font-light text-[#00ff99] max-w-2xl mb-8 opacity-0">AI-Powered Timed Encryption & Fictional Obfuscation System.</p>
-        </div>
-    </div>
-    
-    <!-- Main Website Content (Hidden initially) -->
-    <div id="main-content" class="opacity-0 transition-opacity duration-1000">
+    <!-- Main Website Content -->
+    <div id="main-content" class="transition-opacity duration-1000">
+
+        <!-- Header/Navigation -->
+        <header class="absolute top-0 left-0 w-full z-20 p-4 md:p-8">
+            <nav class="flex justify-between items-center max-w-7xl mx-auto text-white">
+                <a href="#" class="flex items-center space-x-2">
+                    <!-- Placeholder logo image -->
+                    <img src="https://placehold.co/50x50/0a0f1a/00f0ff?text=Logo" alt="CovertComm Logo" class="w-10 h-10 logo-glow-filter">
+                    <span class="text-xl font-bold text-glow-blue">CovertComm</span>
+                </a>
+                <ul class="flex space-x-6 text-gray-300">
+                    <li><a href="#" class="nav-link font-bold transition-colors duration-200">Home</a></li>
+                    <li><a href="#learn-more" class="nav-link font-bold transition-colors duration-200">About</a></li>
+                    <li><a href="#features" class="nav-link font-bold transition-colors duration-200">Features</a></li>
+                    <li><a href="#tech" class="nav-link font-bold transition-colors duration-200">Technology</a></li>
+                    <li><a href="#use-cases" class="nav-link font-bold transition-colors duration-200">Use Cases</a></li>
+                    <li><a href="#contact" class="nav-link font-bold transition-colors duration-200">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
 
         <!-- Hero Section -->
         <section class="relative min-h-screen flex flex-col items-center justify-center text-center p-4 overflow-hidden">
-            <!-- Animated Background Canvas -->
-            <canvas id="heroCanvas" class="absolute inset-0 z-0 w-full h-full"></canvas>
+            <!-- 3D Animated Background -->
+            <div id="three-container"></div>
 
-            <!-- Main Content Area -->
-            <div class="relative z-10 flex flex-col items-center justify-center p-8 rounded-xl frosted-glass">
-                <!-- Sub-headline for more detail -->
-                <p class="text-sm uppercase tracking-widest text-gray-400 mb-2">Secure Communications for a new era</p>
+            <!-- Main Content Area with Frosted Glass -->
+            <div class="relative z-10 flex flex-col items-center justify-center max-w-5xl mx-auto px-4 p-8 rounded-xl frosted-glass">
+                <h1 class="text-5xl md:text-9xl font-extrabold mb-4 text-[#00f0ff] text-shadow-lg">
+                    CovertComm
+                </h1>
                 
-                <!-- Logo -->
-                <h1 class="text-6xl md:text-8xl font-extrabold uppercase mb-4 text-white text-glow-blue">CovertComm</h1>
+                <!-- Subheading -->
+                <p class="text-lg md:text-2xl font-light text-[#00ff9d] max-w-3xl mb-8">
+                    Stealth encryption with AI-driven disguise for defense and intelligence.
+                </p>
                 
-                <!-- Tagline -->
-                <p class="text-xl md:text-2xl font-light text-[#00ff99] max-w-2xl mb-8">AI-Powered Timed Encryption & Fictional Obfuscation System.</p>
-                
-                <!-- Buttons -->
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#contact" class="px-8 py-4 text-lg font-bold rounded-full bg-[#00f0ff] text-[#0a0f1c] shadow-lg hover:bg-white transition-all duration-300">Request Demo</a>
-                    <a href="#learn-more" class="px-8 py-4 text-lg font-bold rounded-full border-2 border-[#00f0ff] text-[#00f0ff] hover:bg-[#00f0ff] hover:text-[#0a0f1c] transition-all duration-300">Learn More</a>
-                </div>
+                <!-- Learn More Button -->
+                <a href="#learn-more" class="px-8 py-4 text-lg font-bold rounded-full bg-[#00f0ff] text-[#0a0f1a] shadow-lg hover:bg-white transition-all duration-300 glitch-btn">
+                    Learn More
+                </a>
             </div>
         </section>
 
@@ -166,7 +145,7 @@
             
             <!-- Illustration -->
             <div class="grid md:grid-cols-2 gap-12 mt-16 items-center">
-                <div class="bg-gray-900 p-8 rounded-xl border border-gray-700 shadow-lg transition-transform duration-300 hover:scale-105">
+                <div class="bg-gray-900 p-8 rounded-xl border border-gray-700 shadow-lg transition-transform duration-300 card-hover">
                     <div class="flex items-center mb-4">
                         <span data-lucide="lock" class="text-red-500 mr-3"></span>
                         <h3 class="text-2xl font-bold text-red-400">Traditional Encryption</h3>
@@ -180,13 +159,13 @@
                     </p>
                 </div>
                 
-                <div class="bg-gray-900 p-8 rounded-xl border border-[#00ff99] shadow-lg transition-transform duration-300 hover:scale-105">
+                <div class="bg-gray-900 p-8 rounded-xl border border-[#00ff9d] shadow-lg transition-transform duration-300 card-hover">
                     <div class="flex items-center mb-4">
-                        <span data-lucide="message-square" class="text-[#00ff99] mr-3"></span>
-                        <h3 class="text-2xl font-bold text-[#00ff99]">CovertComm Disguise</h3>
+                        <span data-lucide="message-square" class="text-[#00ff9d] mr-3"></span>
+                        <h3 class="text-2xl font-bold text-[#00ff9d]">CovertComm Disguise</h3>
                     </div>
                     <div class="h-32 bg-gray-800 p-4 rounded-lg flex items-center justify-center text-center text-gray-400 text-sm">
-                        <p>Obfuscated Message: <span class="text-[#00ff99] font-serif italic">"Subject: Re: Last weekend's golf game..."</span></p>
+                        <p>Obfuscated Message: <span class="text-[#00ff9d] font-serif italic">"Subject: Re: Last weekend's golf game..."</span></p>
                     </div>
                     <p class="text-sm text-center mt-4 text-gray-500">
                         <span data-lucide="shield-check" class="inline-block w-4 h-4 mr-1"></span>
@@ -197,9 +176,9 @@
         </section>
 
         <!-- Solution Overview -->
-        <section class="container mx-auto py-24 px-8">
+        <section id="tech" class="container mx-auto py-24 px-8">
             <div class="text-center max-w-3xl mx-auto">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-[#00ff99] mb-6">Invisible Communication. Unbreakable Security.</h2>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-[#00ff9d] mb-6">Invisible Communication. Unbreakable Security.</h2>
                 <p class="text-lg text-gray-300">
                     CovertComm uses a multi-layered approach to ensure your messages are not just encrypted, but completely invisible to passive surveillance.
                 </p>
@@ -218,12 +197,12 @@
                 </div>
                 <span data-lucide="arrow-right" class="w-8 h-8 text-gray-500 hidden md:block"></span>
                 <div class="flex flex-col items-center">
-                    <span data-lucide="book-open" class="w-12 h-12 text-[#00ff99] mb-2"></span>
+                    <span data-lucide="book-open" class="w-12 h-12 text-[#00ff9d] mb-2"></span>
                     <p class="text-xl font-bold">Fictional Story</p>
                 </div>
                 <span data-lucide="arrow-right" class="w-8 h-8 text-gray-500 hidden md:block"></span>
                 <div class="flex flex-col items-center">
-                    <span data-lucide="user" class="w-12 h-12 text-[#00ff99] mb-2"></span>
+                    <span data-lucide="user" class="w-12 h-12 text-[#00ff9d] mb-2"></span>
                     <p class="text-xl font-bold">Recipient</p>
                 </div>
             </div>
@@ -235,7 +214,7 @@
                     <span>Stealth Encryption</span>
                 </li>
                 <li class="flex items-center space-x-3 text-lg">
-                    <span data-lucide="layers" class="w-6 h-6 text-[#00ff99]"></span>
+                    <span data-lucide="layers" class="w-6 h-6 text-[#00ff9d]"></span>
                     <span>AI Cover Stories</span>
                 </li>
                 <li class="flex items-center space-x-3 text-lg">
@@ -243,18 +222,18 @@
                     <span>Timed Disguises</span>
                 </li>
                 <li class="flex items-center space-x-3 text-lg">
-                    <span data-lucide="network" class="w-6 h-6 text-[#00ff99]"></span>
+                    <span data-lucide="network" class="w-6 h-6 text-[#00ff9d]"></span>
                     <span>Offline Ready</span>
                 </li>
             </ul>
         </section>
 
         <!-- Features Grid -->
-        <section class="container mx-auto py-24 px-8">
+        <section id="features" class="container mx-auto py-24 px-8">
             <h2 class="text-4xl md:text-5xl font-extrabold text-[#00f0ff] text-center mb-12">System Capabilities</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 <div class="bg-gray-900 p-8 rounded-xl border border-gray-700 transition-all duration-300 card-hover">
-                    <span data-lucide="shield-check" class="w-12 h-12 text-[#00ff99] mb-4"></span>
+                    <span data-lucide="shield-check" class="w-12 h-12 text-[#00ff9d] mb-4"></span>
                     <h3 class="text-2xl font-bold mb-2">AES-256 Military Encryption</h3>
                     <p class="text-gray-400">Your core message is protected by the most advanced, military-grade encryption standard available.</p>
                 </div>
@@ -264,7 +243,7 @@
                     <p class="text-gray-400">Our proprietary AI engine crafts plausible, context-aware cover stories to hide your message in plain sight.</p>
                 </div>
                 <div class="bg-gray-900 p-8 rounded-xl border border-gray-700 transition-all duration-300 card-hover">
-                    <span data-lucide="clock-4" class="w-12 h-12 text-[#00ff99] mb-4"></span>
+                    <span data-lucide="clock-4" class="w-12 h-12 text-[#00ff9d] mb-4"></span>
                     <h3 class="text-2xl font-bold mb-2">30-Second Auto-Changing Messages</h3>
                     <p class="text-gray-400">Messages automatically regenerate their cover stories at fixed intervals, making them impossible to track or analyze.</p>
                 </div>
@@ -274,7 +253,7 @@
                     <p class="text-gray-400">Establish a secure, pre-authorized daily sync to receive updated encryption keys and AI story models.</p>
                 </div>
                 <div class="bg-gray-900 p-8 rounded-xl border border-gray-700 transition-all duration-300 card-hover">
-                    <span data-lucide="plane-takeoff" class="w-12 h-12 text-[#00ff99] mb-4"></span>
+                    <span data-lucide="plane-takeoff" class="w-12 h-12 text-[#00ff9d] mb-4"></span>
                     <h3 class="text-2xl font-bold mb-2">Offline Operation</h3>
                     <p class="text-gray-400">Once synced, the system operates completely offline, eliminating network-based vulnerabilities.</p>
                 </div>
@@ -287,8 +266,8 @@
         </section>
 
         <!-- Use Cases Section -->
-        <section class="container mx-auto py-24 px-8">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-[#00ff99] text-center mb-12">Who We Serve</h2>
+        <section id="use-cases" class="container mx-auto py-24 px-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-[#00ff9d] text-center mb-12">Who We Serve</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
                 <div class="bg-gray-900 p-6 rounded-xl border border-gray-700 transition-all duration-300 card-hover">
                     <span data-lucide="swords" class="w-10 h-10 text-[#00f0ff] mb-3"></span>
@@ -296,7 +275,7 @@
                     <p class="text-gray-400 text-sm">Secure field communication without revealing strategic movements or intentions.</p>
                 </div>
                 <div class="bg-gray-900 p-6 rounded-xl border border-gray-700 transition-all duration-300 card-hover">
-                    <span data-lucide="eye" class="w-10 h-10 text-[#00ff99] mb-3"></span>
+                    <span data-lucide="eye" class="w-10 h-10 text-[#00ff9d] mb-3"></span>
                     <h3 class="text-xl font-bold mb-2">Intelligence Agencies</h3>
                     <p class="text-gray-400 text-sm">Discreetly share classified intelligence, operational plans, and agent reports.</p>
                 </div>
@@ -306,7 +285,7 @@
                     <p class="text-gray-400 text-sm">Safeguard sources and transmit sensitive information from high-risk areas.</p>
                 </div>
                 <div class="bg-gray-900 p-6 rounded-xl border border-gray-700 transition-all duration-300 card-hover">
-                    <span data-lucide="briefcase" class="w-10 h-10 text-[#00ff99] mb-3"></span>
+                    <span data-lucide="briefcase" class="w-10 h-10 text-[#00ff9d] mb-3"></span>
                     <h3 class="text-xl font-bold mb-2">Corporate Security</h3>
                     <p class="text-gray-400 text-sm">Protect corporate secrets and sensitive negotiations from industrial espionage.</p>
                 </div>
@@ -320,178 +299,134 @@
                 <form class="space-y-6">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Name</label>
-                        <input type="text" id="name" name="name" class="w-full px-4 py-3 bg-[#0a0f1c] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-300" required>
+                        <input type="text" id="name" name="name" class="w-full px-4 py-3 bg-[#0a0f1a] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-300" required>
                     </div>
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                        <input type="email" id="email" name="email" class="w-full px-4 py-3 bg-[#0a0f1c] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-300" required>
+                        <input type="email" id="email" name="email" class="w-full px-4 py-3 bg-[#0a0f1a] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-300" required>
                     </div>
                     <div>
                         <label for="organization" class="block text-sm font-medium text-gray-300 mb-2">Organization</label>
-                        <input type="text" id="organization" name="organization" class="w-full px-4 py-3 bg-[#0a0f1c] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-duration-300" required>
+                        <input type="text" id="organization" name="organization" class="w-full px-4 py-3 bg-[#0a0f1a] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-duration-300" required>
                     </div>
                     <div>
                         <label for="message" class="block text-sm font-medium text-gray-300 mb-2">Message</label>
-                        <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 bg-[#0a0f1c] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-300" required></textarea>
+                        <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 bg-[#0a0f1a] border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00f0ff] focus:border-transparent transition-colors duration-300" required></textarea>
                     </div>
-                    <button type="submit" class="w-full px-8 py-4 text-lg font-bold rounded-full bg-[#00f0ff] text-[#0a0f1c] shadow-lg hover:bg-white transition-all duration-300">Request Pilot Access</button>
+                    <button type="submit" class="w-full px-8 py-4 text-lg font-bold rounded-full bg-[#00f0ff] text-[#0a0f1a] shadow-lg hover:bg-white transition-all duration-300">Request Pilot Access</button>
                 </form>
             </div>
         </section>
 
         <!-- Footer -->
-        <footer class="bg-[#0a0f1c] text-center py-8 px-4 border-t border-gray-800">
+        <footer class="bg-[#0a0f1a] text-center py-8 px-4 border-t-2 border-[#00f0ff] shadow-inner-glow relative">
             <p class="text-sm text-gray-500 mb-2">© 2025 CovertComm. All rights reserved.</p>
             <p class="text-xs text-gray-600 max-w-2xl mx-auto">Disclaimer: Prototype under restricted development. Certain features limited to authorized agencies and partners.</p>
         </footer>
     </div>
-    <!-- Initialize Lucide Icons and Canvas Animation -->
+    
     <script>
         lucide.createIcons();
 
-        // Intro Screen Animation Logic
+        // 3D background animation with three.js
         window.onload = function() {
-            const introScreen = document.getElementById('intro-screen');
-            const typingTextElement = document.getElementById('typing-text');
-            const introContent = document.getElementById('intro-content');
-            const introLogo = document.getElementById('intro-logo');
-            const introTagline = document.getElementById('intro-tagline');
-            const mainContent = document.getElementById('main-content');
+            const container = document.getElementById('three-container');
+            let scene, camera, renderer, particles;
+            let mouseX = 0, mouseY = 0;
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
 
-            const textToType = "Initializing CovertComm secure channel...";
-            let i = 0;
+            function init() {
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 100;
 
-            // Typing effect
-            function typeWriter() {
-                if (i < textToType.length) {
-                    typingTextElement.innerHTML += textToType.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, 50); // Typing speed
-                } else {
-                    // Start fading out typing text and revealing content
-                    setTimeout(() => {
-                        typingTextElement.style.borderRight = 'none';
-                        typingTextElement.style.opacity = '0';
-                        introContent.style.opacity = '1';
-                        
-                        setTimeout(() => {
-                            // Logo appears and glitches
-                            introLogo.classList.add('glitch');
-                            introLogo.style.opacity = '1';
-                            setTimeout(() => introLogo.classList.remove('glitch'), 1500); // Glitch duration
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                container.appendChild(renderer.domElement);
 
-                            // Tagline appears
-                            setTimeout(() => {
-                                introTagline.style.opacity = '1';
-                            }, 1000);
+                const particleCount = 1000;
+                const geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(particleCount * 3);
+                const colors = new Float32Array(particleCount * 3);
+                
+                const color1 = new THREE.Color(0x00f0ff); // Neon blue
+                const color2 = new THREE.Color(0x00ff9d); // Neon green
 
-                            // Automatically transition to main content after a short delay
-                            setTimeout(() => {
-                                introScreen.style.opacity = '0';
-                                mainContent.style.opacity = '1';
-                                setTimeout(() => {
-                                    introScreen.style.display = 'none';
-                                }, 1000);
-                            }, 3000); // Wait 3 seconds for the logo/tagline to be seen
-
-                        }, 500);
-
-                    }, 1000); // Delay before revealing main intro content
-                }
-            }
-
-            typeWriter();
-
-            // Existing Hero Section Animation
-            const canvas = document.getElementById('heroCanvas');
-            const ctx = canvas.getContext('2d');
-            let lines = [];
-            let mouseX = window.innerWidth / 2;
-            let mouseY = window.innerHeight / 2;
-            let lastLineTime = 0;
-
-            const handleResize = () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            };
-            window.addEventListener('resize', handleResize);
-            handleResize();
-
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-
-            class Line {
-                constructor(startX, startY, endX, endY) {
-                    this.x1 = startX;
-                    this.y1 = startY;
-                    this.x2 = startX;
-                    this.y2 = startY;
-                    this.endX = endX;
-                    this.endY = endY;
-                    this.length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-                    this.progress = 0;
-                    this.speed = Math.random() * 0.02 + 0.005;
-                    this.opacity = 1;
-                    this.color = Math.random() > 0.5 ? '#00f0ff' : '#00ff99';
-                }
-
-                draw() {
-                    ctx.beginPath();
-                    ctx.moveTo(this.x1, this.y1);
-                    ctx.lineTo(this.x2, this.y2);
-                    ctx.strokeStyle = this.color;
-                    ctx.lineWidth = 1;
-                    ctx.globalAlpha = this.opacity;
-                    ctx.stroke();
-                }
-
-                update() {
-                    this.progress += this.speed;
-                    this.opacity = 1 - this.progress;
-                    if (this.progress >= 1) return true;
-
-                    this.x2 = this.x1 + (this.endX - this.x1) * this.progress;
-                    this.y2 = this.y1 + (this.endY - this.y1) * this.progress;
-
-                    if (this.progress > 0.5) {
-                        const pulseOpacity = (1 - this.progress) * 2;
-                        const pulseSize = (1 - this.progress) * 5;
-                        ctx.beginPath();
-                        ctx.arc(this.x2, this.y2, pulseSize, 0, 2 * Math.PI);
-                        ctx.fillStyle = this.color;
-                        ctx.globalAlpha = pulseOpacity;
-                        ctx.fill();
-                    }
+                for (let i = 0; i < particleCount * 3; i += 3) {
+                    positions[i] = (Math.random() - 0.5) * 400;
+                    positions[i + 1] = (Math.random() - 0.5) * 400;
+                    positions[i + 2] = (Math.random() - 0.5) * 400;
                     
-                    return false;
+                    const mixedColor = new THREE.Color();
+                    mixedColor.lerpColors(color1, color2, Math.random());
+                    colors[i] = mixedColor.r;
+                    colors[i + 1] = mixedColor.g;
+                    colors[i + 2] = mixedColor.b;
                 }
+                
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+                const material = new THREE.PointsMaterial({
+                    size: 2,
+                    vertexColors: true,
+                    blending: THREE.AdditiveBlending,
+                    transparent: true,
+                    sizeAttenuation: true
+                });
+
+                particles = new THREE.Points(geometry, material);
+                scene.add(particles);
+
+                // Add a wireframe geometric shape to the center
+                const octahedronGeometry = new THREE.IcosahedronGeometry(25, 1);
+                const wireframe = new THREE.WireframeGeometry(octahedronGeometry);
+                const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff9d, linewidth: 2 });
+                const line = new THREE.LineSegments(wireframe, lineMaterial);
+                scene.add(line);
+
+                document.addEventListener('mousemove', onDocumentMouseMove, false);
+                window.addEventListener('resize', onWindowResize, false);
             }
 
-            const animate = (timestamp) => {
+            function onDocumentMouseMove(event) {
+                mouseX = event.clientX - windowHalfX;
+                mouseY = event.clientY - windowHalfY;
+            }
+
+            function onWindowResize() {
+                windowHalfX = window.innerWidth / 2;
+                windowHalfY = window.innerHeight / 2;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            function animate() {
                 requestAnimationFrame(animate);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.globalAlpha = 0.05;
-                ctx.fillStyle = '#0a0f1c';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                camera.position.x += (mouseX * 0.1 - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY * 0.1 - camera.position.y) * 0.05;
+                camera.lookAt(scene.position);
 
-                if (timestamp - lastLineTime > Math.random() * 150 + 50) {
-                    const startX = Math.random() * canvas.width;
-                    const startY = Math.random() * canvas.height;
-                    
-                    const endX = Math.abs(mouseX - startX) < 300 ? mouseX : Math.random() * canvas.width;
-                    const endY = Math.abs(mouseY - startY) < 300 ? mouseY : Math.random() * canvas.height;
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.001;
+                
+                // Animate the central shape
+                scene.children.forEach(child => {
+                    if (child.isLineSegments) {
+                        child.rotation.x += 0.002;
+                        child.rotation.y += 0.001;
+                    }
+                });
 
-                    lines.push(new Line(startX, startY, endX, endY));
-                    lastLineTime = timestamp;
-                }
+                renderer.render(scene, camera);
+            }
 
-                lines = lines.filter(line => !line.update());
-                lines.forEach(line => line.draw());
-            };
-
-            animate(0);
+            init();
+            animate();
         };
     </script>
 </body>
