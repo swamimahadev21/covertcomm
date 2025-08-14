@@ -371,16 +371,20 @@
             position: relative;
             width: 100%;
             max-width: 800px;
-            /* Removed height and padding to fit video aspect ratio */
+            height: 0; /* Ensures the container's height is determined by padding-bottom */
+            padding-bottom: 56.25%; /* Maintains a 16:9 aspect ratio */
             background: rgba(0, 0, 0, 0.4);
             border: 2px solid var(--neon-blue);
             box-shadow: 0 0 20px var(--neon-blue);
             overflow: hidden;
         }
         .video-container video {
-            display: block; /* To remove extra space below the video */
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto; /* To maintain original aspect ratio */
+            height: 100%;
+            object-fit: cover;
         }
 
         /* --- PDF Modal --- */
@@ -529,6 +533,7 @@
                 <div class="data-card">
                     <h3>Daily Sync Protocol</h3>
                     <p>Ensures all authorized devices are synchronized with the latest security keys and operational parameters, maintaining a secure network.</p>
+                </p>
                 </div>
                 <div class="data-card">
                     <h3>Offline Mode</h3>
